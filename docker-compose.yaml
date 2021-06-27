@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  api:
+    build: ./api
+    command: gunicorn main:app -c gunicorn.py
+    volumes:
+      - ./api:/app
+    environment:
+      FLASK_ENV: development
+      PORT: 3000
+      DB_FILE: tracklists_0610.db
+  frontend:
+    build: ./frontend
+    command: npm run dev
+    ports:
+      - 1234:3000
+    volumes:
+      - ./frontend:/app
+    restart: always
+  nginx:
+    build: ./nginx
+    ports:
+      - 8080:8080
+    links:
+      - api
