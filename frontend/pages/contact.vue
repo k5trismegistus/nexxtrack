@@ -32,7 +32,7 @@
           </a>
         </v-col>
         <v-col cols="4" align="center">
-          <a href="https://github.com/k5trismegistus" target="_blank">
+          <a href="https://github.com/k5trismegistus/nexxtrack" target="_blank">
             <v-icon
               class="link"
               size="64"
