@@ -41,9 +41,14 @@
         <h2>
           {{selected.title}}
         </h2>
-        <v-btn icon :href="selected.track_url" target="_blank">
-          <v-icon>mdi-information</v-icon>
-        </v-btn>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon :href="selected.track_url" target="_blank" v-bind="attrs" v-on="on">
+              <v-icon>mdi-information</v-icon>
+            </v-btn>
+          </template>
+          <span>View track info in 1001tracklists.com</span>
+        </v-tooltip>
       </v-row>
     </v-container>
 
@@ -77,14 +82,24 @@
                     </v-row>
                     <v-row  class="no-padding">
                       <v-col>
-                        <v-btn icon @click.stop :href="track.track_url" target="_blank">
-                          <v-icon>mdi-information</v-icon>
-                        </v-btn>
+                        <v-tooltip bottom>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn icon @click.stop :href="track.track_url" target="_blank" v-bind="attrs" v-on="on">
+                              <v-icon>mdi-information</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>View track info in 1001tracklists.com</span>
+                        </v-tooltip>
                       </v-col>
                       <v-col>
-                        <v-btn icon @click.stop="chooseNext(track)">
-                          <v-icon>mdi-play</v-icon>
-                        </v-btn>
+                        <v-tooltip bottom>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn icon @click.stop="chooseNext(track)" v-bind="attrs" v-on="on">
+                              <v-icon>mdi-play</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>Select this track for next track</span>
+                        </v-tooltip>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -106,9 +121,14 @@
               <v-list-item-subtitle>
               </v-list-item-subtitle>
             </v-list-item-content>
-            <v-btn icon :href="tracklist.url" target="_blank">
-              <v-icon>mdi-information</v-icon>
-            </v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon :href="tracklist.url" target="_blank"  v-bind="attrs" v-on="on">
+                  <v-icon>mdi-information</v-icon>
+                </v-btn>
+              </template>
+              <span>View tracklist info in 1001tracklists.com</span>
+            </v-tooltip>
           </v-list-item>
         </v-list-group>
       </v-list>
