@@ -47,6 +47,14 @@ a {
 .link {
   cursor: pointer;
 }
+
+.no-padding {
+  padding: 0;
+}
+
+.half-padding {
+  padding: 6px;
+}
 </style>
 <style scoped>
 .footer-link {

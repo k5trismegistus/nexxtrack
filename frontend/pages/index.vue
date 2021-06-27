@@ -23,15 +23,17 @@
       <v-row
         justify="center"
       >
-        <v-img-fallback
-          contain
-          max-height="240"
-          max-width="240"
-          :alt="`${selected.title}`"
-          :src="selected.artwork_url"
-          fallbackSrc="/no-artwork_240.png"
-          lazy-src="/no-artwork_240.png"
-        ></v-img-fallback>
+        <v-col cols="6">
+          <v-img-fallback
+            contain
+            max-height="240"
+            max-width="240"
+            :alt="`${selected.title}`"
+            :src="selected.artwork_url"
+            fallbackSrc="/no-artwork_240.png"
+            lazy-src="/no-artwork_240.png"
+          ></v-img-fallback>
+        </v-col>
       </v-row>
       <v-row
         justify="center"
@@ -53,24 +55,42 @@
           :key="track.id"
         >
           <template v-slot:activator>
-            <v-img-fallback
-              contain
-              max-height="120"
-              max-width="120"
-              :alt="`${track.title}`"
-              :src="track.artwork_url"
-              fallbackSrc="/no-artwork_120.png"
-              lazy-src="/no-artwork_120.png"
-            ></v-img-fallback>
-            <title-and-artist-list-content
-                :title="track.title"
-            ></title-and-artist-list-content>
-            <v-btn icon @click.stop :href="track.track_url" target="_blank">
-              <v-icon>mdi-information</v-icon>
-            </v-btn>
-            <v-btn icon @click.stop="chooseNext(track)">
-              <v-icon>mdi-play</v-icon>
-            </v-btn>
+            <v-container>
+              <v-row class="no-padding" align="center">
+                <v-col cols="3" align="center"  class="half-padding">
+                  <v-img-fallback
+                    contain
+                    max-height="120"
+                    max-width="120"
+                    :alt="`${track.title}`"
+                    :src="track.artwork_url"
+                    fallbackSrc="/no-artwork_120.png"
+                    lazy-src="/no-artwork_120.png"
+                  ></v-img-fallback>
+                </v-col>
+                <v-col cols="9"  class="no-padding">
+                  <v-container>
+                    <v-row  class="no-padding">
+                      <title-and-artist-list-content
+                          :title="track.title"
+                      ></title-and-artist-list-content>
+                    </v-row>
+                    <v-row  class="no-padding">
+                      <v-col>
+                        <v-btn icon @click.stop :href="track.track_url" target="_blank">
+                          <v-icon>mdi-information</v-icon>
+                        </v-btn>
+                      </v-col>
+                      <v-col>
+                        <v-btn icon @click.stop="chooseNext(track)">
+                          <v-icon>mdi-play</v-icon>
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-col>
+              </v-row>
+            </v-container>
           </template>
           <v-list-item
             class="using-tracklists"
