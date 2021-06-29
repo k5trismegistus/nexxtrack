@@ -5,12 +5,12 @@ export default {
     host: '0.0.0.0',
     port: 3000,
   },
-  ssr: false,
+  ssr: true,
 
   target: 'static',
 
   head: {
-    titleTemplate: '%sNexxtrack: Explore which track a professional DJ would mix',
+    titleTemplate: '%s - Nexxtrack: Explore which track a professional DJ would mix',
     title: 'Nexxtrack',
     htmlAttrs: {
       lang: 'en'
@@ -27,7 +27,7 @@ export default {
       { hid: 'og:url', property: 'og:url', content: 'https://nexxtrack.club' },
       { hid: 'og:title', property: 'og:title', content: 'nexxtrack' },
       { hid: 'og:description', property: 'og:description', content: 'Nexxtrack: Explore which track a professional DJ would mix after that track. You can get recommendation of next track in your DJ play derived from analysis of top 25% playlist made by popular DJs.' },
-      { hid: 'og:image', property: 'og:image', content: '/ogp.png' },
+      { hid: 'og:image', property: 'og:image', content: 'https://nexxtrack.club/ogp.png' },
 
       { hid: 'twitter:card', name: 'twitter:card', content: 'summary_large_imae' },
     ],

@@ -53,7 +53,7 @@
 </template>
 <script>
 export default {
-  head: { title: 'FAQ - ' },
+  head: { title: 'FAQ' },
 }
 </script>
 <style scoped>

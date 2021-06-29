@@ -46,7 +46,7 @@
 </template>
 <script>
 export default {
-  head: { title: 'Contact - ' },
+  head: { title: 'Contact' },
 }
 </script>
 <style scoped>

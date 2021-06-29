@@ -188,7 +188,7 @@ import TitleAndArtistListContent from '~/components/TitleAndArtistListContent.vu
 
 export default {
   components: { VImgFallback, TitleAndArtistListContent },
-  head: { title: '' },
+  head: { title: 'Top' },
   data() {
     return {
       isLoading: false,
