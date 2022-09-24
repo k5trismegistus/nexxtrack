@@ -58,8 +58,17 @@ export const handler = async (
         Key: { HASH: 'Track', RANGE: id },
       }
       const result = await dynamo.get(params).promise()
+      const t = result['Item']!
 
-      return result['Item']
+      return {
+        artist_url: t.artistUrl,
+        artwork_url: t.artworkUrl,
+        id: t.trackId,
+        title: `${t.artistName} - ${t.trackName}`,
+        track_url: t.trackUrl,
+        track_name: t.trackName,
+        artist_name: t.artistName,
+      }
     })
   )
 

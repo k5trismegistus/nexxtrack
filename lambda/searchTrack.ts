@@ -60,9 +60,15 @@ export const handler = async (
       ? artistQueryResults.Items
       : []
 
-  const responseBody = {
-    tracks: [...tracksByTitle, ...tracksByArtist],
-  }
+  const tracks = [...tracksByTitle, ...tracksByArtist].map((t) => ({
+    artist_url: t.artistUrl,
+    artwork_url: t.artworkUrl,
+    id: t.trackId,
+    title: `${t.artistName} - ${t.trackName}`,
+    track_url: t.trackUrl,
+    track_name: t.trackName,
+    artist_name: t.artistName,
+  }))
 
-  return responseBuilder(200, responseBody)
+  return responseBuilder(200, { tracks })
 }

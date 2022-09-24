@@ -270,6 +270,7 @@ tracks.forEach((track) => {
         primaryString: { S: sortKey(track.trackName) },
         secondaryString: { S: sortKey(track.artistName) },
         primaryNumber: { N: '0' },
+        trackId: { S: track.id },
         trackName: { S: track.trackName },
         artistName: { S: track.artistName },
         trackUrl: { S: track.trackUrl },
