@@ -4,24 +4,19 @@ import {
   APIGatewayProxyResultV2,
 } from 'aws-lambda'
 import { DynamoDB } from 'aws-sdk'
+import { responseBuilder } from './responseBuilder'
 
 export const handler = async (
   event: APIGatewayProxyEventV2,
   context: APIGatewayEventRequestContextV2
 ): Promise<APIGatewayProxyResultV2> => {
   if (!process.env.TABLE_NAME) {
-    return {
-      statusCode: 500,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: 'Dynamo table is not found' }),
-    }
+    return responseBuilder(500, {}, 'Dynamo table is not found')
   }
+  const TABLE_NAME = process.env.TABLE_NAME
+
   if (!event['queryStringParameters']) {
-    return {
-      statusCode: 400,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: 'Query term is blank' }),
-    }
+    return responseBuilder(400, {}, 'Query term is blank')
   }
   const term = event['queryStringParameters']['q'] || ''
 
@@ -69,9 +64,5 @@ export const handler = async (
     tracks: [...tracksByTitle, ...tracksByArtist],
   }
 
-  return {
-    statusCode: 200,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(responseBody),
-  }
+  return responseBuilder(200, responseBody)
 }

@@ -21,6 +21,12 @@ export class RootApi extends Construct {
     this.api = new apigw.RestApi(this, 'RootApi', {
       restApiName: 'nexxtrack-api',
       deployOptions: { stageName: 'v1' },
+      defaultCorsPreflightOptions: {
+        allowOrigins: ['https://nexxtrack.club', 'http://lvh.me:3000'],
+        allowMethods: ['GET'],
+        allowHeaders: apigw.Cors.DEFAULT_HEADERS,
+        statusCode: 200,
+      },
     })
 
     const tracks = new TracksApi(this, 'tracks-api', {
