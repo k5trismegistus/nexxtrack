@@ -8,5 +8,11 @@ node_modules
 .cdk.staging
 cdk.out
 
+# sample data
+*.db
+
+# frontend
+.nuxt
+
 # Developer memo
-note.md
+note

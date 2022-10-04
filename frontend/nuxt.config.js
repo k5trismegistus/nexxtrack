@@ -52,7 +52,7 @@ export default {
   ],
 
   axios: {
-    baseURL: 'https://api.nexxtrack.club/',
+    baseURL: process.env.API_BASE,
   },
 
   router: {
