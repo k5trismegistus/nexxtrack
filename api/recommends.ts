@@ -21,7 +21,7 @@ export class RecommendsApi extends Construct {
     this.table = props.table
     this.handler = new NodejsFunction(this, 'getRecommendedTrackHandler', {
       runtime: lambda.Runtime.NODEJS_16_X,
-      entry: 'lambda/recommendedTracks.ts',
+      entry: 'lambda/indexRecommends.ts',
       handler: 'handler',
       environment: {
         TABLE_NAME: this.table.tableName,
