@@ -47,18 +47,43 @@ export const handler = async (
     }
   }
 
-  const recommendedTrackIds = recommendedTrackQueryResults['Items'].map(
-    (i) => i.recommendedTrackId
+  const tracIdkAndTrackListIds = recommendedTrackQueryResults['Items'].map(
+    (i) => ({
+      trackId: i.recommendedTrackId,
+      tracklistIds: i.tracklistIds,
+    })
   )
 
   const trackResponses = await Promise.all(
-    recommendedTrackIds.map(async (id) => {
-      const params = {
+    tracIdkAndTrackListIds.map(async ({ trackId, tracklistIds }) => {
+      const trackInfoParams = {
         TableName: TABLE_NAME,
-        Key: { HASH: 'Track', RANGE: id },
+        Key: { HASH: 'Track', RANGE: trackId },
       }
-      const result = await dynamo.get(params).promise()
-      const t = result['Item']!
+      const trackResult = await dynamo.get(trackInfoParams).promise()
+      const t = trackResult['Item']!
+
+      const tracklists = await Promise.all(
+        tracklistIds.map(async (tracklistId: string) => {
+          const tracklistInfoParams = {
+            TableName: TABLE_NAME,
+            Key: { HASH: 'Tracklist', RANGE: tracklistId },
+          }
+
+          const resp = await dynamo.get(tracklistInfoParams).promise()
+          const tracklistResult = resp['Item']!
+
+          const r = {
+            artist_name: tracklistResult.artist_name,
+            artwork_url: tracklistResult.artworkUrl,
+            date: tracklistResult.date,
+            title: tracklistResult.title,
+            tracklist_id: tracklistResult.RANGE,
+            url: tracklistResult.tracklistUrl,
+          }
+          return r
+        })
+      )
 
       return {
         artist_url: t.artistUrl,
@@ -68,6 +93,7 @@ export const handler = async (
         track_url: t.trackUrl,
         track_name: t.trackName,
         artist_name: t.artistName,
+        tracklists: tracklists,
       }
     })
   )
