@@ -14,6 +14,7 @@ const NODE_ENV: 'staging' | 'production' = getEnv()
 
 const app = new cdk.App()
 new NexxtrackStack(app, `NexxtrackStack-${NODE_ENV}`, {
+  nodeEnv: NODE_ENV,
   tags: {
     application: 'nexxtrack',
   },

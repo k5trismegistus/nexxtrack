@@ -5,9 +5,12 @@ import * as apigw from 'aws-cdk-lib/aws-apigateway'
 import { Construct } from 'constructs'
 import { TracksApi } from './tracks'
 import { RecommendsApi } from './recommends'
+import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 
 export interface RootApiProps {
   table: dynamodb.Table
+  apiDomain: string
+  certificate: ICertificate
 }
 
 export class RootApi extends Construct {
@@ -19,6 +22,10 @@ export class RootApi extends Construct {
 
     this.table = props.table
     this.api = new apigw.RestApi(this, 'RootApi', {
+      domainName: {
+        domainName: props.apiDomain,
+        certificate: props.certificate,
+      },
       restApiName: 'nexxtrack-api',
       deployOptions: { stageName: 'v1' },
       defaultCorsPreflightOptions: {
