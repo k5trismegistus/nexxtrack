@@ -11,6 +11,7 @@ export interface RootApiProps {
   table: dynamodb.Table
   apiDomain: string
   certificate: ICertificate
+  nodeEnv: 'production' | 'staging'
 }
 
 export class RootApi extends Construct {
@@ -19,6 +20,11 @@ export class RootApi extends Construct {
 
   constructor(scope: Construct, id: string, props: RootApiProps) {
     super(scope, id)
+
+    const origins =
+      props.nodeEnv === 'production'
+        ? ['https://nexxtrack.club']
+        : ['https://stage.nexxtrack.club', 'http://lvh.me:3000']
 
     this.table = props.table
     this.api = new apigw.RestApi(this, 'RootApi', {
@@ -29,7 +35,7 @@ export class RootApi extends Construct {
       restApiName: 'nexxtrack-api',
       deployOptions: { stageName: 'v1' },
       defaultCorsPreflightOptions: {
-        allowOrigins: ['https://nexxtrack.club', 'http://lvh.me:3000'],
+        allowOrigins: origins,
         allowMethods: ['GET'],
         allowHeaders: apigw.Cors.DEFAULT_HEADERS,
         statusCode: 200,

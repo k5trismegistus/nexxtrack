@@ -8,11 +8,13 @@ node_modules
 .cdk.staging
 cdk.out
 
-# sample data
+# import data
+import/*
 *.db
 
 # frontend
-.nuxt
+.nuxt/
+dist/
 
 # Developer memo
 note

@@ -1,8 +1,13 @@
-import * as cdk from 'aws-cdk-lib'
-import * as route53 from 'aws-cdk-lib/aws-route53'
-import * as apigw from 'aws-cdk-lib/aws-apigateway'
-import * as alias from 'aws-cdk-lib/aws-route53-targets'
+import { Stack, StackProps, RemovalPolicy, Duration } from 'aws-cdk-lib'
+
+import * as iam from 'aws-cdk-lib/aws-iam'
+import * as s3 from 'aws-cdk-lib/aws-s3'
+import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as certificatemanager from 'aws-cdk-lib/aws-certificatemanager'
+import * as route53 from 'aws-cdk-lib/aws-route53'
+import { S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins'
+// import * as alias from 'aws-cdk-lib/aws-route53-targets'
+// import * as apigw from 'aws-cdk-lib/aws-apigateway'
 import { Construct } from 'constructs'
 import { RootApi } from '../api/root'
 
@@ -29,11 +34,11 @@ const getCertificateArn = (stage: 'production' | 'staging'): string => {
   return process.env.CERTIFICATE_ARN_STAGING!
 }
 
-export interface NexxtrackStackProps extends cdk.StackProps {
+export interface NexxtrackStackProps extends StackProps {
   nodeEnv: 'production' | 'staging'
 }
 
-export class NexxtrackStack extends cdk.Stack {
+export class NexxtrackStack extends Stack {
   constructor(scope: Construct, id: string, props: NexxtrackStackProps) {
     super(scope, id, props)
 
@@ -70,6 +75,7 @@ export class NexxtrackStack extends cdk.Stack {
       table: nexxtrackDb.table,
       apiDomain: apiDomain,
       certificate: certificate,
+      nodeEnv: props.nodeEnv,
     })
     // customDomain.addBasePathMapping(api.api, {})
 
@@ -78,5 +84,69 @@ export class NexxtrackStack extends cdk.Stack {
     //   recordName: apiDomain,
     //   target: route53.RecordTarget.fromAlias(new alias.ApiGateway(api.api)),
     // }).applyRemovalPolicy(cdk.RemovalPolicy.RETAIN)
+
+    const frontendBucket = new s3.Bucket(
+      this,
+      `nexxtrack-frontend-bucket-${props.nodeEnv}`,
+      {
+        removalPolicy: RemovalPolicy.DESTROY,
+        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      }
+    )
+
+    const originAccessIdentity = new cloudfront.OriginAccessIdentity(
+      this,
+      'OriginAccessIdentity',
+      {
+        comment: 'website-distribution-originAccessIdentity',
+      }
+    )
+
+    const frontendBucketPolicyStatement = new iam.PolicyStatement({
+      actions: ['s3:GetObject'],
+      effect: iam.Effect.ALLOW,
+      principals: [
+        new iam.CanonicalUserPrincipal(
+          originAccessIdentity.cloudFrontOriginAccessIdentityS3CanonicalUserId
+        ),
+      ],
+      resources: [`${frontendBucket.bucketArn}/*`],
+    })
+
+    frontendBucket.addToResourcePolicy(frontendBucketPolicyStatement)
+
+    const distribution = new cloudfront.Distribution(
+      this,
+      `nexxtrack-frontend-distribution-${props.nodeEnv}`,
+      {
+        defaultRootObject: 'index.html',
+        errorResponses: [
+          {
+            ttl: Duration.seconds(300),
+            httpStatus: 403,
+            responseHttpStatus: 403,
+            responsePagePath: '/error.html',
+          },
+          {
+            ttl: Duration.seconds(300),
+            httpStatus: 404,
+            responseHttpStatus: 404,
+            responsePagePath: '/error.html',
+          },
+        ],
+        defaultBehavior: {
+          allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
+          cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
+          cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+          viewerProtocolPolicy:
+            cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+          origin: new S3Origin(frontendBucket, {
+            originAccessIdentity,
+            originPath: '/current',
+          }),
+        },
+        priceClass: cloudfront.PriceClass.PRICE_CLASS_ALL,
+      }
+    )
   }
 }
