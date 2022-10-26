@@ -10,15 +10,21 @@ export default {
   target: 'static',
 
   head: {
-    titleTemplate: '%s - Nexxtrack: Explore which track a professional DJ would mix',
+    titleTemplate:
+      '%s - Nexxtrack: Explore which track a professional DJ would mix',
     title: 'Nexxtrack',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'en',
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'Nexxtrack: Explore which track a professional DJ would mix after that track. You can get recommendation of next track in your DJ play derived from analysis of top 25% playlist made by popular DJs.' },
+      {
+        hid: 'description',
+        name: 'description',
+        content:
+          'Nexxtrack: Explore which track a professional DJ would mix after that track. You can get recommendation of next track in your DJ play derived from analysis of top 25% playlist made by popular DJs.',
+      },
       { hid: 'keywords', name: 'keywords', content: 'DJ,playlist,music,club' },
       { hid: 'author', name: 'author', content: 'nexxtrack' },
 
@@ -26,14 +32,25 @@ export default {
       { hid: 'og:type', property: 'og:type', content: 'website' },
       { hid: 'og:url', property: 'og:url', content: 'https://nexxtrack.club' },
       { hid: 'og:title', property: 'og:title', content: 'nexxtrack' },
-      { hid: 'og:description', property: 'og:description', content: 'Nexxtrack: Explore which track a professional DJ would mix after that track. You can get recommendation of next track in your DJ play derived from analysis of top 25% playlist made by popular DJs.' },
-      { hid: 'og:image', property: 'og:image', content: 'https://nexxtrack.club/ogp.png' },
+      {
+        hid: 'og:description',
+        property: 'og:description',
+        content:
+          'Nexxtrack: Explore which track a professional DJ would mix after that track. You can get recommendation of next track in your DJ play derived from analysis of top 25% playlist made by popular DJs.',
+      },
+      {
+        hid: 'og:image',
+        property: 'og:image',
+        content: 'https://nexxtrack.club/ogp.png',
+      },
 
-      { hid: 'twitter:card', name: 'twitter:card', content: 'summary_large_imae' },
+      {
+        hid: 'twitter:card',
+        name: 'twitter:card',
+        content: 'summary_large_imae',
+      },
     ],
-    link: [
-      { rel: 'icon', type: 'image/png', href: '/favicon.png' }
-    ]
+    link: [{ rel: 'icon', type: 'image/png', href: '/favicon.png' }],
   },
 
   css: [],
@@ -42,17 +59,15 @@ export default {
 
   components: true,
 
-  buildModules: [
-    '@nuxtjs/vuetify',
-  ],
+  buildModules: ['@nuxtjs/vuetify'],
 
-  modules: [
-    '@nuxtjs/axios',
-    '@nuxtjs/gtm',
-  ],
+  modules: ['@nuxtjs/axios', '@nuxtjs/gtm'],
 
   axios: {
-    baseURL: process.env.API_BASE,
+    baseURL:
+      process.env.NODE_ENV === 'production'
+        ? process.env.PRODUCTION_API_BASE
+        : process.env.STAGING_API_BASE,
   },
 
   router: {
@@ -60,11 +75,11 @@ export default {
       for (const route of routes) {
         route.alias = resolve(route.path, 'index.html')
       }
-    }
+    },
   },
 
   gtm: {
-    id: 'GTM-NWT6KMX'
+    id: 'GTM-NWT6KMX',
   },
 
   vuetify: {
@@ -79,11 +94,11 @@ export default {
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
-          success: colors.green.accent3
-        }
-      }
-    }
+          success: colors.green.accent3,
+        },
+      },
+    },
   },
 
-  build: {}
+  build: {},
 }
