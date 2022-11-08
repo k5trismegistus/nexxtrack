@@ -32,7 +32,7 @@ export const handler = async (
     ExpressionAttributeValues: {
       ':pk': `Recommend#${trackId}`,
     },
-    ScanIndexForward: false,
+    ScanIndexForward: true,
     Limit: 5,
   }
   const recommendedTrackQueryResults = await dynamo
@@ -49,7 +49,7 @@ export const handler = async (
 
   const tracIdkAndTrackListIds = recommendedTrackQueryResults['Items'].map(
     (i) => ({
-      trackId: i.recommendedTrackId,
+      trackId: i.followingTrackId,
       tracklistIds: i.tracklistIds,
     })
   )
@@ -67,14 +67,14 @@ export const handler = async (
         tracklistIds.map(async (tracklistId: string) => {
           const tracklistInfoParams = {
             TableName: TABLE_NAME,
-            Key: { HASH: 'Tracklist', RANGE: tracklistId },
+            Key: { HASH: `Tracklist#${tracklistId}`, RANGE: tracklistId },
           }
 
           const resp = await dynamo.get(tracklistInfoParams).promise()
           const tracklistResult = resp['Item']!
 
           const r = {
-            artist_name: tracklistResult.artist_name,
+            artist_name: tracklistResult.artistName,
             artwork_url: tracklistResult.artworkUrl,
             date: tracklistResult.date,
             title: tracklistResult.title,
